@@ -72,7 +72,7 @@ namespace daemon_console
                     .WithAuthority(new Uri(config.Authority))
                     .Build();
             }
-        
+
             else
             {
                 X509Certificate2 certificate = ReadCertificate(config.CertificateName);
@@ -86,7 +86,8 @@ namespace daemon_console
             // application permissions need to be set statically (in the portal or by PowerShell), and then granted by
             // a tenant administrator. The Graph endpoint may have to be changed for national cloud scenarios, refer to
             // https://docs.microsoft.com/graph/deployments#microsoft-graph-and-graph-explorer-service-root-endpoints
-            string[] scopes = new string[] { "https://graph.microsoft.com/.default" };
+
+            string[] scopes = new string[] { "https://management.azure.com/.default" };
 
             AuthenticationResult result = null;
             try
@@ -110,7 +111,12 @@ namespace daemon_console
             {
                 var httpClient = new HttpClient();
                 var apiCaller = new ProtectedApiCallHelper(httpClient);
-                await apiCaller.CallWebApiAndProcessResultASync("https://graph.microsoft.com/v1.0/users", result.AccessToken, Display);
+                //await apiCaller.CallWebApiAndProcessResultASync("https://graph.microsoft.com/v1.0/users", result.AccessToken, Display);
+                //await apiCaller.CallWebApiAndProcessResultASync("https://graph.microsoft.com/v1.0/me/messages", result.AccessToken, Display);
+
+                await apiCaller.CallWebApiAndProcessResultASync("https://management.azure.com/subscriptions?api-version=2019-11-01", result.AccessToken, Display);
+                await apiCaller.CallWebApiAndProcessResultASync("https://management.azure.com/subscriptions/beedfcef-3ec8-4568-9b08-49d9e14bfb0e/resourcegroups?api-version=2019-10-01", result.AccessToken, Display);
+
             }
         }
 
